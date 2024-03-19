@@ -5,32 +5,41 @@ import NavBar from "./components/NavBar";
 import { ImagesContext } from "./context/ImagesContext";
 import router from "./Router";
 import { env } from "./env";
+import { useCallback } from "react";
 
 function App() {
-
   const API_URL = `https://api.unsplash.com/photos/?client_id=${env.AccessKey}`;
 
   const [imagesList, setImagesList] = useState([]);
   const [starImages, setStarImages] = useState([]);
-  const [loading, setLoding] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const fetchImages = async () => {
-    await fetch(`${API_URL}`).then((res) => {
-      res.json().then((response) => {
-        setImagesList(response);
-        setLoding(false);
-        // let ex = [...response].sort(() => Math.random() - 0.5);
-        // console.log("ex", ex[0]);
-        // setRandomImage(ex[0].urls.regular);
-      });
-    });
-  };
+  const fetchImages = useCallback(async () => {
+    try {
+      const response = await fetch(API_URL);
+      if (!response.ok) {
+        throw new Error("Failed to fetch images");
+      }
+      const data = await response.json();
+      console.log(data);
+      setImagesList(data);
+      setLoading(false);
+
+      // let ex = [...response].sort(() => Math.random() - 0.5);
+      //     console.log("ex", ex[0]);
+      //    setRandomImage(ex[0].urls.regular);
+    } catch (error) {
+      console.error("Error fetching images:", error);
+    }
+  }, [API_URL]);
 
   useEffect(() => {
-    fetchImages()
-  }, []);
+    fetchImages();
+  }, [fetchImages]);
+
 
   const value = {
+    loading,
     imagesList,
     setImagesList,
     starImages,
