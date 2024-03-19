@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { ImagesContext } from "../context/ImagesContext";
 import { env } from "../env";
+import { useCallback } from "react";
 
 const SearchField = () => {
   const {
@@ -14,7 +15,7 @@ const SearchField = () => {
     setSearchValue(e.target.value);
   };
 
-  const handleButtonSearch = () => {
+  const handleButtonSearch =useCallback( () => {
     fetch(
       `https://api.unsplash.com/search/photos?page=1&query=${searchValue}&client_id=${env.AccessKey}`
     ).then((res) => {
@@ -26,11 +27,11 @@ const SearchField = () => {
           : setImagesList(imagesList);
       });
     });
-  };
+  },[searchValue,imagesList,setImagesList])
 
   useEffect(() => {
     handleButtonSearch();
-  }, [searchValue]);
+  }, [searchValue,handleButtonSearch]);
 
   return (
     <div className="flex">

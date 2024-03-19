@@ -1,31 +1,30 @@
-import React, {  useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import NavBar from "./NavBar";
 import SearchField from "./SearchField";
 import Images from "./Images";
 import { env } from "../env";
 
 const Home = () => {
-
   const API_URL_RANDOM = `https://api.unsplash.com/photos/random?client_id=${env.AccessKey}`;
   const [loading, setLoding] = useState(true);
 
   const [randomimage, setRandomImage] = useState({});
 
-  const fetchImage = async () => {
+  const fetchImage = useCallback(async () => {
     await fetch(`${API_URL_RANDOM}`).then((res) => {
       res.json().then((response) => {
         setRandomImage(response?.urls?.regular);
-        setLoding(false)
+        setLoding(false);
         // let ex = [...response].sort(() => Math.random() - 0.5);
         // console.log("ex", ex[0]);
         // setRandomImage(ex[0].urls.regular);
       });
     });
-  };
+  }, [API_URL_RANDOM]);
 
   useEffect(() => {
     fetchImage();
-  }, []);
+  }, [fetchImage]);
 
   return (
     <>
