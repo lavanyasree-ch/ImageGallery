@@ -11,15 +11,25 @@ const Home = () => {
   const [randomimage, setRandomImage] = useState({});
 
   const fetchImage = useCallback(async () => {
-    await fetch(`${API_URL_RANDOM}`).then((res) => {
-      res.json().then((response) => {
-        setRandomImage(response?.urls?.regular);
+    await fetch(`${API_URL_RANDOM}`)
+      .then((res) => {
+        res
+          .json()
+          .then((response) => {
+            setRandomImage(response?.urls?.regular);
+            setLoding(false);
+            // let ex = [...response].sort(() => Math.random() - 0.5);
+            // console.log("ex", ex[0]);
+            // setRandomImage(ex[0].urls.regular);
+          })
+          .catch((err) => {
+            console.log(err, "err");
+            setLoding(false);
+          });
+      })
+      .catch((err) => {
         setLoding(false);
-        // let ex = [...response].sort(() => Math.random() - 0.5);
-        // console.log("ex", ex[0]);
-        // setRandomImage(ex[0].urls.regular);
       });
-    });
   }, [API_URL_RANDOM]);
 
   useEffect(() => {

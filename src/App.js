@@ -30,6 +30,7 @@ function App() {
       //    setRandomImage(ex[0].urls.regular);
     } catch (error) {
       console.error("Error fetching images:", error);
+      setLoading(false);
     }
   }, [API_URL]);
 
